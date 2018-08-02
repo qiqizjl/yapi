@@ -106,6 +106,7 @@ class baseController {
       }
 
       if (decoded.uid == uid) {
+        ctx.state.user = result
         this.$uid = uid;
         this.$auth = true;
         this.$user = result;

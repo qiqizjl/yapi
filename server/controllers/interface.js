@@ -227,7 +227,7 @@ class interfaceController extends baseController {
     }
 
     let result = await this.Model.save(data);
-    yapi.emitHook('interface_add', result._id).then();
+    yapi.emitHook('interface_add', result._id,ctx).then();
     this.catModel.get(params.catid).then(cate => {
       let username = this.getUsername();
       let title = `<a href="/user/profile/${this.getUid()}">${username}</a> 为分类 <a href="/project/${
@@ -357,7 +357,7 @@ class interfaceController extends baseController {
           return (ctx.body = yapi.commons.resReturn(null, 406, '没有权限'));
         }
       }
-      yapi.emitHook('interface_get', params.id).then();
+      yapi.emitHook('interface_get', params.id,ctx).then();
       result = result.toObject();
       if (userinfo) {
         result.username = userinfo.username;
@@ -413,7 +413,7 @@ class interfaceController extends baseController {
         total: Math.ceil(count / limit),
         list: result
       });
-      yapi.emitHook('interface_list', project_id).then();
+      yapi.emitHook('interface_list', project_id,ctx).then();
     } catch (err) {
       ctx.body = yapi.commons.resReturn(null, 402, err.message);
     }
@@ -671,8 +671,7 @@ class interfaceController extends baseController {
         </html>`
       });
     }
-
-    yapi.emitHook('interface_update', id).then();
+    yapi.emitHook('interface_update', id,ctx,interfaceData,CurrentInterfaceData).then();
     ctx.body = yapi.commons.resReturn(result);
     return 1;
   }
@@ -718,9 +717,9 @@ class interfaceController extends baseController {
         }
       }
 
+      yapi.emitHook('interface_del', id,ctx).then();
       let inter = await this.Model.get(id);
       let result = await this.Model.del(id);
-      yapi.emitHook('interface_del', id).then();
       await this.caseModel.delByInterfaceId(id);
       let username = this.getUsername();
       this.catModel.get(inter.catid).then(cate => {
@@ -889,7 +888,7 @@ class interfaceController extends baseController {
       let interfaceData = await this.Model.listByCatid(id);
       interfaceData.forEach(async item => {
         try {
-          yapi.emitHook('interface_del', item._id).then();
+          yapi.emitHook('interface_del', item._id,ctx).then();
           await this.caseModel.delByInterfaceId(item._id);
         } catch (e) {
           yapi.commons.log(e.message, 'error');

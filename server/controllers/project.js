@@ -533,7 +533,7 @@ class projectController extends baseController {
     }
     result.role = await this.getProjectRole(params.id, 'project');
 
-    yapi.emitHook('project_add', params.id).then();
+    yapi.emitHook('project_add', params.id,ctx).then();
     ctx.body = yapi.commons.resReturn(result);
   }
 
@@ -620,7 +620,7 @@ class projectController extends baseController {
     await interfaceInst.delByProjectId(id);
     await interfaceCaseInst.delByProjectId(id);
     await interfaceColInst.delByProjectId(id);
-    yapi.emitHook('project_del', id).then();
+    yapi.emitHook('project_del', id,ctx).then();
     let result = await this.Model.del(id);
     ctx.body = yapi.commons.resReturn(result);
   }

@@ -246,7 +246,7 @@ module.exports = async (ctx, next) => {
         
       }
 
-      await yapi.emitHook('mock_after', context);
+      await yapi.emitHook('mock_after', context,ctx);
 
       let handleMock = new Promise(resolve => {
         setTimeout(() => {
